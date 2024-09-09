@@ -9,8 +9,7 @@ import UIKit
 
 import UIKit
 
-class ViewController: UIViewController, CarouselViewControllerDelegate {
-
+class ViewController: UIViewController, CarouselViewControllerDelegate, UIScrollViewDelegate {
     private let scrollView = UIScrollView()
     private let searchInputField = SearchInputField()
     private let mysteryButton = MysteryButton()
@@ -24,7 +23,7 @@ class ViewController: UIViewController, CarouselViewControllerDelegate {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        self.view.backgroundColor = .systemPink
+        self.view.backgroundColor = .white
         
         loadImagesData()
         setupScrollView()
@@ -80,6 +79,8 @@ class ViewController: UIViewController, CarouselViewControllerDelegate {
 
         searchInputField.heightAnchor.constraint(equalToConstant: 40).isActive = true
         stackView.addArrangedSubview(searchInputField)
+        
+        // searchInputField.topAnchor.constraint(equalTo: scrollView.safeAreaLayoutGuide.topAnchor).isActive = true
     }
 
     private func setupCarouselView() {

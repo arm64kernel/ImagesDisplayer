@@ -46,6 +46,12 @@ class MysteryBottomSheetViewController: UIViewController {
         setupView()
     }
     
+    func updateStatistics(_ statistics: (itemCount: Int, topCharacters: [(character: Character, count: Int)])) {
+        let statsText = "This list consists of \(statistics.itemCount) item(s)\n" +
+            statistics.topCharacters.map { "The occurrence of: '\($0.character)' is \($0.count)" }.joined(separator: "\n")
+        statsLabel.text = statsText
+    }
+    
     private func setupView() {
         view.addSubview(titleLabel)
         view.addSubview(statsLabel)

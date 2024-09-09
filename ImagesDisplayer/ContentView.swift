@@ -53,9 +53,7 @@ struct ContentView: View {
         guard let currentPageData = imageDataArray[safe: currentIndex] else {
             return (0, [])
         }
-        
-        print("[XD]", currentPageData.description.count)
-        
+                
         let description: [[String: String]] = currentPageData.description
         let itemCount = description.count
         

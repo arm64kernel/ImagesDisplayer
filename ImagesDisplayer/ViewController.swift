@@ -11,7 +11,10 @@ import UIKit
 
 class ViewController: UIViewController, CarouselViewControllerDelegate, UIScrollViewDelegate {
     private let scrollView = UIScrollView()
-    private let searchInputField = SearchInputField()
+    
+    private let stickedSearchInputField = SearchInputField()
+    private let unpinnedSearchInputField = SearchInputField()
+    
     private let mysteryButton = MysteryButton()
     private var carouselViewController: CarouselViewController!
     private var descriptionListViewController: DescriptionListViewController!
@@ -29,17 +32,22 @@ class ViewController: UIViewController, CarouselViewControllerDelegate, UIScroll
         setupScrollView()
         setupStackView()
         setupCarouselView()
-        setupSearchInputField()
+        
+        setupUnpinnedSearchInputField()
+        setupPinnedView()
+        
         setupDescriptionListView()
         setupMysteryButton()
         setupBottomSheetView()
     }
-
+    
     private func setupScrollView() {
         scrollView.translatesAutoresizingMaskIntoConstraints = false
         scrollView.alwaysBounceVertical = true  // Ensure vertical scrolling
 
         view.addSubview(scrollView)
+        
+        scrollView.delegate = self
         
         NSLayoutConstraint.activate([
             scrollView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
@@ -70,17 +78,47 @@ class ViewController: UIViewController, CarouselViewControllerDelegate, UIScroll
         ])
     }
 
-    private func setupSearchInputField() {
-        searchInputField.onTextChanged = { [weak self] query in
+    private func setupUnpinnedSearchInputField() {
+        unpinnedSearchInputField.onTextChanged = { [weak self] query in
             self?.searchQuery = query
             self?.descriptionListViewController.searchQuery = query
+            
+            self?.stickedSearchInputField.searchText = query
+            
             self?.descriptionListViewController.tableView.reloadData()
         }
 
-        searchInputField.heightAnchor.constraint(equalToConstant: 40).isActive = true
-        stackView.addArrangedSubview(searchInputField)
+        unpinnedSearchInputField.heightAnchor.constraint(equalToConstant: 40).isActive = true
+        stackView.addArrangedSubview(unpinnedSearchInputField)
         
         // searchInputField.topAnchor.constraint(equalTo: scrollView.safeAreaLayoutGuide.topAnchor).isActive = true
+    }
+    
+    private func setupPinnedView() {
+        stickedSearchInputField.onTextChanged = { [weak self] query in
+            self?.searchQuery = query
+            self?.descriptionListViewController.searchQuery = query
+
+            self?.unpinnedSearchInputField.searchText = query
+
+            self?.descriptionListViewController.tableView.reloadData()
+        }
+        
+        view.addSubview(stickedSearchInputField)
+        
+        stickedSearchInputField.layer.opacity = 0.0
+
+        stickedSearchInputField.translatesAutoresizingMaskIntoConstraints = false
+           NSLayoutConstraint.activate([
+               // Pin to the top of the superview
+               stickedSearchInputField.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
+               // Pin to the leading edge of the superview
+               stickedSearchInputField.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 16),
+               // Pin to the trailing edge of the superview
+               stickedSearchInputField.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -16),
+               // Set a fixed height for the search input field
+               stickedSearchInputField.heightAnchor.constraint(equalToConstant: 40)
+           ])
     }
 
     private func setupCarouselView() {
@@ -180,5 +218,17 @@ class ViewController: UIViewController, CarouselViewControllerDelegate, UIScroll
 
     private func loadImagesData() {
         imagesDataArray = ImageLoader.loadAllImageData(fromDirectory: "SampleImages")
+    }
+    
+    func scrollViewDidScroll(_ scrollView: UIScrollView) {
+        let unpinnedFieldY = unpinnedSearchInputField.frame.origin.y
+        
+        let contentOffsetY = scrollView.contentOffset.y
+        
+        if unpinnedFieldY > contentOffsetY {
+            stickedSearchInputField.layer.opacity = 0.0
+        } else {
+            stickedSearchInputField.layer.opacity = 1.0
+        }
     }
 }

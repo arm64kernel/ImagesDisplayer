@@ -7,60 +7,70 @@
 
 import UIKit
 
+import UIKit
+
 class ViewController: UIViewController, CarouselViewControllerDelegate {
 
-    // MARK: - Properties
+    private let scrollView = UIScrollView()
     private let searchInputField = SearchInputField()
     private let mysteryButton = MysteryButton()
     private var carouselViewController: CarouselViewController!
     private var descriptionListViewController: DescriptionListViewController!
     private var bottomSheetViewController: MysteryBottomSheetViewController!
-
-    // Dummy data for demonstration
     private var imagesDataArray: [ImageData] = []
     private var currentIndex: Int = 0
     private var searchQuery: String = ""
-
-    // Main vertical stack view to hold everything
     private let stackView = UIStackView()
 
-    // MARK: - Lifecycle
     override func viewDidLoad() {
         super.viewDidLoad()
         self.view.backgroundColor = .systemPink
         
         loadImagesData()
-
+        setupScrollView()
         setupStackView()
         setupCarouselView()
         setupSearchInputField()
         setupDescriptionListView()
         setupMysteryButton()
-        setupBottomSheetView()  // Prepare the bottom sheet
+        setupBottomSheetView()
     }
 
-    // MARK: - Setup Methods
+    private func setupScrollView() {
+        scrollView.translatesAutoresizingMaskIntoConstraints = false
+        scrollView.alwaysBounceVertical = true  // Ensure vertical scrolling
 
-    // 1. Setting up the main UIStackView
+        view.addSubview(scrollView)
+        
+        NSLayoutConstraint.activate([
+            scrollView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
+            scrollView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            scrollView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+            scrollView.bottomAnchor.constraint(equalTo: view.bottomAnchor)
+        ])
+    }
+
     private func setupStackView() {
-        // Configure stack view properties
         stackView.axis = .vertical
         stackView.alignment = .fill
         stackView.distribution = .fill
         stackView.spacing = 16
         stackView.translatesAutoresizingMaskIntoConstraints = false
 
-        view.addSubview(stackView)
+        stackView.isLayoutMarginsRelativeArrangement = true
+        stackView.layoutMargins = UIEdgeInsets(top: 0, left: 16, bottom: 0, right: 16)
+        
+        scrollView.addSubview(stackView)
 
         NSLayoutConstraint.activate([
-            stackView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
-            stackView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 16),
-            stackView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -16),
-            stackView.bottomAnchor.constraint(equalTo: view.bottomAnchor)
+            stackView.topAnchor.constraint(equalTo: scrollView.topAnchor),
+            stackView.leadingAnchor.constraint(equalTo: scrollView.leadingAnchor),
+            stackView.trailingAnchor.constraint(equalTo: scrollView.trailingAnchor),
+            stackView.bottomAnchor.constraint(equalTo: scrollView.bottomAnchor),
+            stackView.widthAnchor.constraint(equalTo: scrollView.widthAnchor)
         ])
     }
 
-    // 2. Search Input Field Setup
     private func setupSearchInputField() {
         searchInputField.onTextChanged = { [weak self] query in
             self?.searchQuery = query
@@ -72,7 +82,6 @@ class ViewController: UIViewController, CarouselViewControllerDelegate {
         stackView.addArrangedSubview(searchInputField)
     }
 
-    // 3. Carousel View Setup
     private func setupCarouselView() {
         let imageArray = imagesDataArray.map { $0.image }
         carouselViewController = CarouselViewController(images: imageArray)
@@ -85,7 +94,6 @@ class ViewController: UIViewController, CarouselViewControllerDelegate {
         carouselViewController.view.heightAnchor.constraint(equalToConstant: 200).isActive = true
     }
 
-    // 4. Description List View Setup
     private func setupDescriptionListView() {
         descriptionListViewController = DescriptionListViewController()
         descriptionListViewController.imageDataArray = imagesDataArray
@@ -95,9 +103,12 @@ class ViewController: UIViewController, CarouselViewControllerDelegate {
         addChild(descriptionListViewController)
         stackView.addArrangedSubview(descriptionListViewController.view)
         descriptionListViewController.didMove(toParent: self)
+
+        descriptionListViewController.view.translatesAutoresizingMaskIntoConstraints = false
+        NSLayoutConstraint.activate([
+        ])
     }
 
-    // 5. Mystery Button Setup (Floating Button)
     private func setupMysteryButton() {
         mysteryButton.layer.cornerRadius = 30
         mysteryButton.onClick = { [weak self] in
@@ -107,7 +118,6 @@ class ViewController: UIViewController, CarouselViewControllerDelegate {
         mysteryButton.translatesAutoresizingMaskIntoConstraints = false
         view.addSubview(mysteryButton)
 
-        // Positioning the mystery button as a floating button
         NSLayoutConstraint.activate([
             mysteryButton.widthAnchor.constraint(equalToConstant: 64),
             mysteryButton.heightAnchor.constraint(equalToConstant: 64),
@@ -117,24 +127,21 @@ class ViewController: UIViewController, CarouselViewControllerDelegate {
     }
 
     private func setupBottomSheetView() {
-        // Initialize the bottom sheet view controller without statistics
         bottomSheetViewController = MysteryBottomSheetViewController(statistics: calculateStatistics())
     }
 
-    // 7. Present Bottom Sheet
     private func presentBottomSheet() {
         guard let bottomSheetViewController = bottomSheetViewController else { return }
         bottomSheetViewController.modalPresentationStyle = .pageSheet
         
         if let sheet = bottomSheetViewController.sheetPresentationController {
-            sheet.detents = [.custom { _ in return 300 }]  // Set height to 300 points
-            sheet.prefersGrabberVisible = true  // Enable grabber
+            sheet.detents = [.custom { _ in return 300 }]
+            sheet.prefersGrabberVisible = true
         }
         
         present(bottomSheetViewController, animated: true, completion: nil)
     }
 
-    // Function to calculate the statistics
     private func calculateStatistics() -> (itemCount: Int, topCharacters: [(character: Character, count: Int)]) {
         guard let currentPageData = imagesDataArray[safe: currentIndex] else {
             return (0, [])
@@ -160,20 +167,16 @@ class ViewController: UIViewController, CarouselViewControllerDelegate {
     private func updateBottomSheetStatistics() {
         guard let bottomSheetVC = bottomSheetViewController else { return }
         let updatedStatistics = calculateStatistics()
-        bottomSheetVC.updateStatistics(updatedStatistics)  // Ensure this method is implemented in MysteryBottomSheetViewController
+        bottomSheetVC.updateStatistics(updatedStatistics)
     }
 
-    // MARK: - CarouselViewControllerDelegate
     func carouselViewController(_ carouselViewController: CarouselViewController, didScrollToIndex index: Int) {
         currentIndex = index
         descriptionListViewController.currentIndex = index
         descriptionListViewController.tableView.reloadData()
-
-        // Update bottom sheet statistics
         updateBottomSheetStatistics()
     }
 
-    // MARK: - Dummy Data Loading
     private func loadImagesData() {
         imagesDataArray = ImageLoader.loadAllImageData(fromDirectory: "SampleImages")
     }

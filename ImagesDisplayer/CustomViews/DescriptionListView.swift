@@ -14,9 +14,10 @@ class DescriptionListViewController: UIViewController, UITableViewDataSource, UI
     var currentIndex: Int = 0
     var searchQuery: String = ""
     
-    let tableView: UITableView = {
-        let tableView = UITableView()
+    let tableView: ContentSizedTableView = {
+        let tableView = ContentSizedTableView()
         tableView.translatesAutoresizingMaskIntoConstraints = false
+        tableView.isScrollEnabled = false  // Disable scrolling, let parent scroll
         return tableView
     }()
     

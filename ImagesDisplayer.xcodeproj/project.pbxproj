@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		4516881C2C8F2E6A001DC2FB /* ContentSizedTableView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4516881B2C8F2E6A001DC2FB /* ContentSizedTableView.swift */; };
 		45C1CB902C8F171A002A3F57 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45C1CB8F2C8F171A002A3F57 /* AppDelegate.swift */; };
 		45C1CB922C8F171A002A3F57 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45C1CB912C8F171A002A3F57 /* SceneDelegate.swift */; };
 		45C1CB942C8F171A002A3F57 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45C1CB932C8F171A002A3F57 /* ViewController.swift */; };
@@ -25,6 +26,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		4516881B2C8F2E6A001DC2FB /* ContentSizedTableView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentSizedTableView.swift; sourceTree = "<group>"; };
 		45C1CB8C2C8F171A002A3F57 /* ImagesDisplayer.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ImagesDisplayer.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		45C1CB8F2C8F171A002A3F57 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		45C1CB912C8F171A002A3F57 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -104,6 +106,7 @@
 				45F7CC502C8F1B01000C5DB1 /* MysteryButton.swift */,
 				45F7CC522C8F1B14000C5DB1 /* MysteryBottomSheetView.swift */,
 				45F7CC542C8F1B26000C5DB1 /* DescriptionListView.swift */,
+				4516881B2C8F2E6A001DC2FB /* ContentSizedTableView.swift */,
 				45F7CC5B2C8F1D52000C5DB1 /* Carousel */,
 			);
 			path = CustomViews;
@@ -207,6 +210,7 @@
 				45F7CC492C8F19D2000C5DB1 /* ImageData.swift in Sources */,
 				45C1CB922C8F171A002A3F57 /* SceneDelegate.swift in Sources */,
 				45F7CC532C8F1B14000C5DB1 /* MysteryBottomSheetView.swift in Sources */,
+				4516881C2C8F2E6A001DC2FB /* ContentSizedTableView.swift in Sources */,
 				45F7CC512C8F1B01000C5DB1 /* MysteryButton.swift in Sources */,
 				45F7CC4F2C8F1AEB000C5DB1 /* SearchInputField.swift in Sources */,
 			);
